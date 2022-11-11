@@ -1,0 +1,47 @@
+﻿@using Milton.Blazor.Shared.Interfaces;
+@inherits LayoutComponentBase
+@inject IPageTitleService PageTitleService
+<div class="min-h-full w-full">
+    <div class="absolute h-full w-full top-0 right-0 z-[-1]">
+        <div class="w-full h-3/5">
+            <div class="flex flex-row h-full w-ful">
+                <div class="flex w-4/12 h-full grow-0 flex-col">
+                    <div class="h-3/5 w-full" style="background-color:#0C71C3;"></div>
+                    <div class="h-2/5 w-full" style="background-color:#003366;"></div>
+                </div>
+                <div class="flex grow h-full" style="background-color:#38A3FB"></div>
+            </div>
+        </div>
+        <div class="w-full h-2/5 bg-white"></div>
+    </div>
+    <div>
+        <Milton.Blazor.Shared.UserControls.NavBar></Milton.Blazor.Shared.UserControls.NavBar>
+    </div>
+    <header class="body-font">
+        <div class="max-w-[14rem] px-6 pt-16 sm:px-6 lg:px-8">
+            <h3 class="text-lg tracking-tight text-white">@_subTitle </h3>
+            <h1 class="text-3xl font-bold tracking-tight text-white">@_mainTitle</h1>
+        </div>
+    </header>
+    <main class="w-full body-font pb-4 pt-16">
+        @Body
+    </main>
+</div>
+
+@code{
+    private string _mainTitle = string.Empty;
+    private string _subTitle = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PageTitleService.OnTitleChanged += TitleChanged;
+    }
+
+    private void TitleChanged()
+    {
+        _mainTitle = PageTitleService.MainTitle;
+        _subTitle = PageTitleService.SubTitle;
+        StateHasChanged();
+    }
+}

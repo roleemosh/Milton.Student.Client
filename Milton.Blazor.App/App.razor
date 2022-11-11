@@ -1,0 +1,10 @@
+﻿<Router AppAssembly="@typeof(App).Assembly"AdditionalAssemblies="new[] {typeof(Milton.Blazor.Shared.Layouts.MainLayout).Assembly}">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(Milton.Blazor.Shared.Layouts.MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(Milton.Blazor.Shared.Layouts.MainLayout)">
+            <Milton.Blazor.Shared.Pages.EmptyView></Milton.Blazor.Shared.Pages.EmptyView>
+        </LayoutView>
+    </NotFound>
+</Router>

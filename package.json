@@ -1,0 +1,16 @@
+{
+  "name": "milton.blazor.client",
+  "description": "milton CSS",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "buildcss": "postcss Milton.Blazor.Shared/Styles/app.css -o Milton.Blazor.Shared/wwwroot/css/milton.min.css --minify"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.13",
+    "cssnano": "^5.1.14",
+    "postcss": "^8.4.19",
+    "postcss-cli": "^10.0.0",
+    "tailwindcss": "^3.2.3"
+  }
+}
