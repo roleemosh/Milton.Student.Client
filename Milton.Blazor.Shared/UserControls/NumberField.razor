@@ -1,0 +1,25 @@
+﻿<input type="number" @bind-value="@Value" class="disabled:opacity-75 h-[2.6rem] w-full disabled:cursor-not-allowed cursor-pointer rounded-md border border-gray-300 bg-white py-2 pl-3 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" min="0" maxlength="3" max="100" />
+
+@code {
+    [Parameter]
+    public int Value
+    #region
+    {
+        get => _value;
+        set
+        {
+            if (_value != value)
+            {
+                _value = value;
+
+                if (ValueChanged.HasDelegate)
+                    ValueChanged.InvokeAsync(value);
+            }
+        }
+    }
+    private int _value;
+    #endregion
+
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+}

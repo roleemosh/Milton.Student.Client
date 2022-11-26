@@ -8,6 +8,10 @@
 
 @layer base {
 
+    tr.spaceUnder > td {
+        padding-bottom: 0.5em;
+    }
+
     html, body {
         @apply h-full w-full antialiased;
     }

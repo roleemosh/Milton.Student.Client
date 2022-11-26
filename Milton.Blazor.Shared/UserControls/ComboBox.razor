@@ -1,10 +1,9 @@
-﻿<h3>ComboBox</h3>
-
-@typeparam TValue
+﻿@typeparam TValue
 
 <div class="relative w-[12rem]">
-    <button type="button" @onclick=@OnOpenButtonClicked class="h-[2.6rem] w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+    <button disabled="@IsReadOnly" type="button" @onclick=@OnOpenButtonClicked class="disabled:opacity-75 h-[2.6rem] w-full disabled:cursor-not-allowed cursor-pointer rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="@_isExpanded" aria-labelledby="listbox-label">
         <span class="block truncate">@Value</span>
+    
         <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <!-- Heroicon name: mini/chevron-up-down -->
             <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -13,11 +12,15 @@
         </span>
     </button>
 
-    @if (_isExpanded)
+    @if (_isExpanded && IsReadOnly == false)
     {
-        <ul class="z-10 absolute mt-2 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm" tabindex="-1" role="listbox">
+        <div onclick="@OnContentFaderClicked" class="content-overlay"></div>
+        <ul class="border z-10 top-0 absolute max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm" tabindex="-1" role="listbox">
+            <li @onclick=@(() => OnSelectAction(default(TValue))) class="text-gray-900 relative cursor-default bg-white hover:bg-blue-300 py-2 pl-3 pr-9" id="listbox-option-0" role="option">
+                <span class="font-normal block truncate">egyik sem</span>
+            </li>
             <Virtualize ItemsProvider="@GetRows" Context="context">
-                <li @onclick=@(() => OnSelectAction(context)) class="text-gray-900 relative cursor-default bg-white hover:bg-blue-300 py-2 pl-3 pr-9" data-interval="@context" id="listbox-option-0" role="option">
+                <li @onclick=@(() => OnSelectAction(context)) class="text-gray-900 relative cursor-default bg-white hover:bg-blue-300 py-2 pl-3 pr-9" data-interval="@context" role="option">
                     <span class="font-normal block truncate">@context</span>
                 </li>
             </Virtualize>
@@ -34,6 +37,12 @@
         if (ValueChanged.HasDelegate == true)
             ValueChanged.InvokeAsync(Value);
     }
+
+    private void OnContentFaderClicked()
+    {
+        OnOpenButtonClicked();
+    }
+
     private bool _isExpanded;
     private ValueTask<ItemsProviderResult<TValue>> GetRows(ItemsProviderRequest request) => new(new ItemsProviderResult<TValue>(
                             ItemsSource.Skip(request.StartIndex).Take(request.Count),
@@ -46,6 +55,8 @@
     public IList<TValue> ItemsSource { get; set; }
     [Parameter]
     public bool IsReadOnly { get; set; }
+    [Parameter]
+    public bool Mandatory { get; set; } = true;
     [Parameter]
     public string PlaceholderText { get; set; }
 
