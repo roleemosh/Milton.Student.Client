@@ -1,4 +1,4 @@
-﻿namespace Milton.Blazor.Shared.Models
+﻿namespace Milton.Blazor.Shared.UIModels
 {
     public class MainCard
     {

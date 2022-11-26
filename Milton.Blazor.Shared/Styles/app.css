@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --mdc-theme-primary: #38A3FB;
+}
+
 @layer base {
 
     html, body {
@@ -10,6 +14,7 @@
 }
 
 @layer components {
+
 
     .content-overlay {
         top: 0;

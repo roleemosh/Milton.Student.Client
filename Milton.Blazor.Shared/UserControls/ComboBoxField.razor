@@ -1,0 +1,25 @@
+﻿@typeparam TValue
+
+<MudSelect  T="TValue">
+        <div style="height:200px;">
+            <Virtualize ItemsProvider="@GetRows" Context="context">
+                <MudSelectItem T="TValue" Value="@context">@context</MudSelectItem>
+            </Virtualize>
+        </div>
+</MudSelect>
+
+@code {
+    private ValueTask<ItemsProviderResult<TValue>> GetRows(ItemsProviderRequest request) => new(new ItemsProviderResult<TValue>(
+                            ItemsSource.Skip(request.StartIndex).Take(request.Count),
+                            ItemsSource.Count));
+    [Parameter]
+    public TValue Value { get; set; }
+    [Parameter]
+    public EventCallback<TValue> ValueChanged { get; set; }
+    [Parameter]
+    public IList<TValue> ItemsSource { get; set; }
+    [Parameter]
+    public bool IsReadOnly { get; set; }
+    [Parameter]
+    public string PlaceholderText { get; set; }
+}

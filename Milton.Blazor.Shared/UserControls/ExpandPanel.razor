@@ -1,0 +1,44 @@
+﻿<div>
+    <div class="flex space-x-1">
+        <button class="px-3 py-2" @onclick="OnExpandButtonClick">
+            <div class="flex">
+                <svg class="@(IsExpanded ? "rotate-180" : string.Empty) transition-all " width="20" height="20" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_145_2)">
+                        <path d="M29.64 34.36L48 52.68L66.36 34.36L72 40L48 64L24 40L29.64 34.36Z" fill="black" />
+                    </g>
+                </svg>
+                <p>@HeaderText</p>
+            </div>
+
+        </button>
+
+    </div>
+
+    @if (IsExpanded)
+    {
+        <div class="w-full">
+            @ChildContent
+        </div>
+    }
+   
+</div>
+@code {
+
+    [Parameter]
+    public bool IsExpanded { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsExpandedChanged { get; set; }
+
+    [Parameter]
+    public string HeaderText { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private void OnExpandButtonClick()
+    {
+        IsExpanded = !IsExpanded;
+    }
+
+}

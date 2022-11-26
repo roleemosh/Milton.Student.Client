@@ -1,7 +1,22 @@
 ﻿@page "/courses"
-
+@using Microsoft.AspNetCore.Components.Web
+@using Milton.Blazor.Shared.Interfaces;
+@inject IPageTitleService PageTitleService
+<PageTitle>CoursesView</PageTitle>
 <h3>CoursesView</h3>
 
 @code {
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        UpdateMainTitle();
+    }
+
+    private void UpdateMainTitle()
+    {
+        PageTitleService.MainTitle = "Eredmények";
+        PageTitleService.SubTitle = "Pontszámító";
+
+    }
 }

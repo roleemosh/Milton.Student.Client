@@ -1,6 +1,102 @@
 ﻿@page "/calculator"
-<h3>CalculatorView</h3>
+
+@using Microsoft.AspNetCore.Components.Web
+@using Milton.Blazor.Shared.Helpers;
+@using Milton.Blazor.Shared.Interfaces;
+@using Milton.Blazor.Shared.Models;
+@using Milton.Blazor.Shared.ViewModels;
+
+@inject IPageTitleService PageTitleService
+@inject ISnackbar Snakbar
+@inject ISubjectRepo SubjectRepo
+
+<PageTitle>CalculatorView</PageTitle>
+
+<div class="container ml-16 mr-10 p-4 relative">
+    <div class="w-full h-full bg-white rounded-lg shadow p-4">
+        <div>
+            @*  <img src="_content/Milton.Blazor.Shared/pictures/calculator.svg" alt="Milton's calculator" class="right-0 bottom-[1.8rem] absolute" />*@
+            <p>Szakképesítés szakmai vizsga eredménye alapján történő pontszámításra jelenleg a kalkulátor még szintén nem használható! A szakképesítésről a Tájékoztató alábbi fejezetében található részletes információ: Érettségi pont számítása meghatározott szakképzettség alapján.</p>
+        </div>
+        <div class="flex flex-col">
+            @*High school*@
+            <div class="flex">
+                <div class="w-1/3 p-4">
+                    <h3>Középiskolai eredmények</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
+                </div>
+                <div class="w-2/3 bg-orange-300 rounded-lg  p-4">
+                    <div class="flex flex-col gap-y-0.5">
+                        <div class="flex justify-end  items-center">
+                            <div class="flex flex-row gap-x-0.5">
+                                <h4 class="w-10">11.</h4>
+                                <h4 class="w-10">12.</h4>
+                            </div>
+                        </div>
+
+                        @foreach (Subject subject in ViewModel.CurrentSubjects)
+                        {
+                            <div class="flex flex-none justify-between items-center ">
+                                <p>@subject.Name</p>
+                                <div class="flex flex-row gap-x-0.5">
+                                    <GradeField @bind-value=@subject.BeforeCurrentGrade></GradeField>
+                                    <GradeField @bind-value=@subject.CurrentGrade></GradeField>
+                                </div>
+                            </div>
+                        }
+
+                        @*Language and choosed subjects*@
+                        <div class="flex flex-none justify-between items-center">
+                            
+                            <ComboBox ItemsSource="@ViewModel.GetAllSubjects" TValue=string @bind-Value="@ViewModel.SelectedLanguageOrChoosed.Name"></ComboBox>
+                            <div class="flex flex-row gap-x-0.5">
+                                <GradeField IsReadOnly="@(string.IsNullOrEmpty(ViewModel.SelectedLanguageOrChoosed.Name))" @bind-value=@ViewModel.SelectedLanguageOrChoosed.BeforeCurrentGrade></GradeField>
+                                <GradeField IsReadOnly="@(string.IsNullOrEmpty(ViewModel.SelectedLanguageOrChoosed.Name))" @bind-value=@ViewModel.SelectedLanguageOrChoosed.CurrentGrade></GradeField>
+                            </div>
+                        </div>
+
+                        @*Natural subjects*@
+                        <div class="flex flex-none justify-between items-center">
+                            <ComboBox ItemsSource="@ViewModel.GetNaturalSciences()" TValue=string @bind-Value="@ViewModel.SelectedNaturalScience.Name"></ComboBox>
+                            <div class="flex flex-row gap-x-0.5">
+                                <GradeField IsReadOnly="@(string.IsNullOrEmpty(ViewModel.SelectedNaturalScience.Name))" @bind-value=@ViewModel.SelectedNaturalScience.BeforeCurrentGrade></GradeField>
+                                <GradeField IsReadOnly="@(string.IsNullOrEmpty(ViewModel.SelectedNaturalScience.Name))" @bind-value=@ViewModel.SelectedNaturalScience.CurrentGrade></GradeField>
+                            </div>
+                        </div>
+                        @*Secondary natural subjects*@
+                        <div class="flex flex-none justify-between items-center">
+                            <ComboBox ItemsSource="@ViewModel.GetSecondaryNaturalSciences()" TValue=string @bind-Value="@ViewModel.SelectedSecondaryNaturalScience.Name"></ComboBox>
+                            <div class="flex flex-row gap-x-0.5">
+                                <GradeField IsReadOnly="@(string.IsNullOrEmpty(ViewModel.SelectedSecondaryNaturalScience.Name))" @bind-value=@ViewModel.SelectedSecondaryNaturalScience.BeforeCurrentGrade></GradeField>
+                                <GradeField IsReadOnly="@(string.IsNullOrEmpty(ViewModel.SelectedSecondaryNaturalScience.Name))" @bind-value=@ViewModel.SelectedSecondaryNaturalScience.CurrentGrade></GradeField>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @code {
 
+    private CalculatorViewModel ViewModel;
+
+    protected override Task OnInitializedAsync()
+    {
+        return ViewModel.InitAsync();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ViewModel = new(PageTitleService, Snakbar, SubjectRepo);
+    }
+
+    private void OnExpandPanelChanged(bool isOpened)
+    {
+
+    }
 }

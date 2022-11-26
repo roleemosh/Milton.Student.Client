@@ -1,0 +1,57 @@
+﻿<h3>ComboBox</h3>
+
+@typeparam TValue
+
+<div class="relative w-[12rem]">
+    <button type="button" @onclick=@OnOpenButtonClicked class="h-[2.6rem] w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+        <span class="block truncate">@Value</span>
+        <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+            <!-- Heroicon name: mini/chevron-up-down -->
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clip-rule="evenodd" />
+            </svg>
+        </span>
+    </button>
+
+    @if (_isExpanded)
+    {
+        <ul class="z-10 absolute mt-2 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm" tabindex="-1" role="listbox">
+            <Virtualize ItemsProvider="@GetRows" Context="context">
+                <li @onclick=@(() => OnSelectAction(context)) class="text-gray-900 relative cursor-default bg-white hover:bg-blue-300 py-2 pl-3 pr-9" data-interval="@context" id="listbox-option-0" role="option">
+                    <span class="font-normal block truncate">@context</span>
+                </li>
+            </Virtualize>
+        </ul>
+    }
+
+</div>
+@code {
+
+    private void OnSelectAction(TValue context)
+    {
+        OnOpenButtonClicked();
+        Value = context;
+        if (ValueChanged.HasDelegate == true)
+            ValueChanged.InvokeAsync(Value);
+    }
+    private bool _isExpanded;
+    private ValueTask<ItemsProviderResult<TValue>> GetRows(ItemsProviderRequest request) => new(new ItemsProviderResult<TValue>(
+                            ItemsSource.Skip(request.StartIndex).Take(request.Count),
+                            ItemsSource.Count));
+    [Parameter]
+    public TValue Value { get; set; }
+    [Parameter]
+    public EventCallback<TValue> ValueChanged { get; set; }
+    [Parameter]
+    public IList<TValue> ItemsSource { get; set; }
+    [Parameter]
+    public bool IsReadOnly { get; set; }
+    [Parameter]
+    public string PlaceholderText { get; set; }
+
+    private void OnOpenButtonClicked()
+    {
+        _isExpanded = !_isExpanded;
+        StateHasChanged();
+    }
+}

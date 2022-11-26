@@ -1,0 +1,39 @@
+﻿@using Milton.Blazor.Shared.Translates;
+
+<select @onchange="OnChanged" disabled="@IsReadOnly" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-10 h-10  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+    <option value="0" selected></option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+</select>
+
+@code {
+
+    [Parameter]
+    public bool IsReadOnly { get; set; }
+
+    [Parameter]
+    public int Value { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    [Parameter]
+    public string PlaceholderText { get; set; }
+
+    private void OnChanged(ChangeEventArgs e)
+    {
+        if (e.Value is not null)
+        {
+            Value = (int)e.Value;
+            ValueChanged.InvokeAsync(Value);
+        }
+    }
+
+    public GradeField()
+    {
+        PlaceholderText = AppResources.GradeField_PlaceholderText;
+    }
+}

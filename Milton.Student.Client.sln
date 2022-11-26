@@ -7,11 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Common", ".Common", "{2D69
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blazor", "Blazor", "{F42B2EB9-971C-4EB9-8A29-C4391834E379}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milton.Base", "Milton.Base\Milton.Base.csproj", "{9F8B1E83-6E36-49E3-B7A7-E281E7EA6E06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Milton.Base", "Milton.Base\Milton.Base.csproj", "{9F8B1E83-6E36-49E3-B7A7-E281E7EA6E06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milton.Blazor.App", "Milton.Blazor.App\Milton.Blazor.App.csproj", "{7784D70A-F02F-40CE-B8F6-4DAF50056F9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Milton.Blazor.App", "Milton.Blazor.App\Milton.Blazor.App.csproj", "{7784D70A-F02F-40CE-B8F6-4DAF50056F9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milton.Blazor.Shared", "Milton.Blazor.Shared\Milton.Blazor.Shared.csproj", "{80615C3B-1F0C-4DB3-8C61-DED623FE278F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Milton.Blazor.Shared", "Milton.Blazor.Shared\Milton.Blazor.Shared.csproj", "{80615C3B-1F0C-4DB3-8C61-DED623FE278F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
