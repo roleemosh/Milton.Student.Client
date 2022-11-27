@@ -3,11 +3,8 @@ using Milton.Blazor.Shared.Interfaces;
 using Milton.Blazor.Shared.Models;
 using Milton.Blazor.Shared.ViewModels.Base;
 using MudBlazor;
-using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.Json.Serialization;
 
 namespace Milton.Blazor.Shared.ViewModels
 {
@@ -81,7 +78,7 @@ namespace Milton.Blazor.Shared.ViewModels
             _currentSubjects = new List<Subject>()
         {
             new Subject(){ Name = "magyar irodalom" },
-            new Subject(){ Name = "magyar nyelv" },
+            new Subject(){ Name = "magyar nyelv"},
             new Subject(){ Name = "történelem" },
             new Subject(){ Name = "matematika" },
         };
@@ -98,7 +95,8 @@ namespace Milton.Blazor.Shared.ViewModels
 
         private List<string> _allSubejcts;
 
-        public CalculatorViewModel(IPageTitleService pageTitleService, ISnackbar snackbar, ISubjectRepo subjectRepo, NavigationManager navigation) : base(pageTitleService, snackbar, navigation)
+        public CalculatorViewModel(IPageTitleService pageTitleService, ISnackbar snackbar, ISubjectRepo subjectRepo, NavigationManager navigation)
+            : base(pageTitleService, snackbar, navigation)
         {
             _subjectRepo = subjectRepo;
             _selectedLanguageOrChoosed = new();
@@ -185,22 +183,7 @@ namespace Milton.Blazor.Shared.ViewModels
             PageTitleService.SubTitle = "Pontszámító";
         }
 
-        private int CalculateGraduatePoints()
-        {
-            int points = 0;
-            byte maxGraduationCount = 2;
-            for (int i = 0; i < CurrentGraduations.Count; i++)
-            {
-                Graduation grad = CurrentGraduations[i];
-                points += grad.Percentage;
-                if (grad.IsHigh && grad.Percentage > 45 && maxGraduationCount > 0)
-                {
-                    points += 50;
-                    maxGraduationCount--;
-                }
-            }
-            return points;
-        }
+    
         private int CalculateHighSchoolPoints()
         {
             int points = 0;
@@ -265,34 +248,53 @@ namespace Milton.Blazor.Shared.ViewModels
 
                 PointResult results = new();
 
-                #region Graduation
-                results.GraduationPoints = new List<PointResult.GraduationPoint>();
-                foreach (Graduation grad in CurrentGraduations)
-                {
-                    results.GraduationPoints.Add(new PointResult.GraduationPoint()
-                    {
-                        IsHighLevel = grad.IsHigh,
-                        Name = grad.Name,
-                        Point = grad.Percentage
-                    });
-                }
-                results.GraduationPoints.Add(new PointResult.GraduationPoint()
-                {
-                    IsHighLevel = GraduationChoosed.IsHigh,
-                    Name = GraduationChoosed.Name,
-                    Point = GraduationChoosed.Percentage
-                });
-                results.GraduationPoints.Add(new PointResult.GraduationPoint()
-                {
-                    IsHighLevel = GraduationLanguage.IsHigh,
-                    Name = GraduationLanguage.Name,
-                    Point = GraduationLanguage.Percentage
-                });
-                #endregion Graduation
+                #region Subjects
+                results.Subjects.AddRange(_currentSubjects);
+                results.Subjects.Add(_selectedLanguageOrChoosed);
+                results.Subjects.Add(_selectedNaturalScience);
+                results.Subjects.Add(_selectedSecondaryNaturalScience);
+                #endregion Subjects
 
-                var jsonResult = System.Text.Json.JsonSerializer.Serialize(results);
-                Navigation.NavigateTo($"point/{jsonResult}");
+                #region Graduations
+                results.Graduations.AddRange(_currentGraduations);
+                results.Graduations.Add(_graduationLanguage);
+                results.Graduations.Add(_graduationChoosed);
+                #endregion Graduations
+
+
+                string jsonResult = System.Text.Json.JsonSerializer.Serialize(results);
+                var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(jsonResult);
+                string base64 = Convert.ToBase64String(plainTextBytes);
+                Navigation.NavigateTo($"calculatorresult/{base64}");
             }
         }
+
+        public void TestNavigation()
+        {
+            PointResult results = new();
+
+            #region Subjects
+            results.Subjects.Add(new Subject() { Name = "magyar irodalom", CurrentGrade = 4, BeforeCurrentGrade = 2 });
+            results.Subjects.Add(new Subject() { Name = "magyar nyelv", CurrentGrade = 3, BeforeCurrentGrade = 5 });
+            results.Subjects.Add(new Subject() { Name = "történelem", CurrentGrade = 4, BeforeCurrentGrade = 4 });
+            results.Subjects.Add(new Subject() { Name = "matematika", CurrentGrade = 3, BeforeCurrentGrade = 5 });
+            results.Subjects.Add(new Subject() { Name = "informatika", CurrentGrade = 4, BeforeCurrentGrade = 5 });
+            results.Subjects.Add(new Subject() { Name = "kémia", CurrentGrade = 4, BeforeCurrentGrade = 5 });
+            #endregion Subjects
+
+            #region Graduations
+            results.Graduations.Add(new Graduation() { Name = "magyar nyelv és irodalom", IsHigh = false, Percentage = 75 });
+            results.Graduations.Add(new Graduation() { Name = "matematika", IsHigh = true, Percentage = 54 });
+            results.Graduations.Add(new Graduation() { Name = "történelem", IsHigh = false, Percentage = 55 });
+            results.Graduations.Add(new Graduation() { Name = "angol nyelv", IsHigh = false, Percentage = 77 });
+            results.Graduations.Add(new Graduation() { Name = "informatika ismeretek", IsHigh = true, Percentage = 99 });
+            #endregion Graduations
+
+            string jsonResult = System.Text.Json.JsonSerializer.Serialize(results);
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(jsonResult);
+            string base64 = Convert.ToBase64String(plainTextBytes);
+            Navigation.NavigateTo($"calculatorresult/{base64}");
+        }
+
     }
 }

@@ -2,21 +2,12 @@
 {
     public class PointResult
     {
-        public class SubjectPoint
+        public PointResult()
         {
-            public int Point { get; set; }
-            public string Name { get; set; }
+            Graduations = new();
+            Subjects = new();
         }
-
-        public class GraduationPoint
-        {
-            public int Point { get; set; }
-            public bool IsHighLevel { get; set; }
-            public string Name { get; set; }
-        }
-
-        public List<SubjectPoint> SubjectPoints { get; set; }
-        public List<GraduationPoint> GraduationPoints { get; set; }
-
+        public List<Graduation> Graduations { get; set; }
+        public List<Subject> Subjects { get; set; }
     }
 }

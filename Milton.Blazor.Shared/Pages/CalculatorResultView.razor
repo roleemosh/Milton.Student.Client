@@ -1,0 +1,126 @@
+﻿@page "/calculatorresult/{base64}"
+@using Milton.Blazor.Shared.Interfaces;
+@using Milton.Blazor.Shared.Models;
+@using Milton.Blazor.Shared.ViewModels;
+@inject IPageTitleService PageTitleService
+@inject ISnackbar Snackbar
+@inject ISubjectRepo SubjectRepo
+@inject NavigationManager NavigationManager
+
+<div class="container relative">
+    <div class="w-full h-full bg-white rounded-lg shadow p-4 max-w-[70%] m-auto">
+        <div class="flex py-[3rem]">
+            <div class="w-2/5"></div>
+            <img src="_content/Milton.Blazor.Shared/pictures/calculator.svg" alt="Milton's calculator" class="absolute" style="
+    top: -70px;
+    left: 185px;
+" />
+            <div class="w-3/5 bg-orange-300 rounded-lg  p-4">
+                <div class="flex flex-col text-end">
+                    <h4 class="text-xl font-bold">Max pontszámod</h4>
+                    <span class="text-3xl font-bold">@ViewModel.Points</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col">
+            <div>
+                <h3>Alapképzések</h3>
+                <p>Az alábbi listában láthatod, hogy az előző évben melyik alap és foszk képzésünkre kerültél volna be.</p>
+            </div>
+
+            <ul class="space-y-4">
+                @foreach (DisplayCourseResult course in ViewModel.DisplayCourseResults)
+                {
+                    <li class="border border-gray-300 px-4 py-2 rounded-md">
+                        <div>
+                            <p class="w-3/5">@course.Course.Name</p>
+
+                            @if (string.IsNullOrEmpty(course.Error) == false)
+                            {
+                                <div class="rounded-full h-5 w-5 bg-red-700">
+                                    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M56 5.64L50.36 0L28 22.36L5.64 0L0 5.64L22.36 28L0 50.36L5.64 56L28 33.64L50.36 56L56 50.36L33.64 28L56 5.64Z" fill="white" />
+                                    </svg>
+                                </div>
+                            }
+                            else if (string.IsNullOrEmpty( course.Warning) == false)
+                            {
+                                <div class="rounded-full h-5 w-5 bg-orange-700">
+                                    <svg width="88" height="76" viewBox="0 0 88 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M0 76H88L44 0L0 76ZM48 64H40V56H48V64ZM48 48H40V32H48V48Z" fill="white" />
+                                    </svg>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="rounded-full h-5 w-5 bg-green-700">
+                                    <svg viewBox="0 0 71 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M22.36 42.32L5.68 25.64L0 31.28L22.36 53.64L70.36 5.64L64.72 0L22.36 42.32Z" fill="white" />
+                                    </svg>
+                                </div>
+                            }
+
+                        </div>
+                        <div>
+                            <p class="w-3/5">@course.Course.Description</p>
+                            <div class="w-2/5 text-end">
+                                <p class="text-base font-normal">Előző év</p>
+                                <span class="text-lg font-medium ">@course.Course.PrevPoints</span>
+                            </div>
+                        </div>
+                        @*Error*@
+                        @if (string.IsNullOrEmpty(course.Error) == false)
+                        {
+                            <div class="round bg-red-200">
+                                <p>@course.Error</p>
+                            </div>
+                        }
+                        @*Warnings*@
+                        @if (string.IsNullOrEmpty(course.Warning) == false)
+                        {
+                            <div class="round bg-orange-200">
+                                <p>@course.Warning</p>
+                            </div>
+                        }
+                        <div>
+                            <p>@course.PointInfo</p>
+                        </div>
+
+                    </li>
+                }
+            </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Base64 { get; set; }
+
+    private CalculatorResultViewModel ViewModel;
+
+    protected override Task OnParametersSetAsync()
+    {
+        return ViewModel.InitAsync();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        try
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(Base64);
+            PointResult pointResult = System.Text.Json.JsonSerializer.Deserialize<PointResult>(System.Text.Encoding.UTF8.GetString(base64EncodedBytes));
+            ViewModel = new(pointResult, PageTitleService, Snackbar, SubjectRepo, NavigationManager);
+        }
+        catch (Exception ex)
+        {
+            this.Snackbar.Add("Nem megfelelő az url", Severity.Error);
+            NavigationManager.NavigateTo("/");
+        }
+    }
+}
