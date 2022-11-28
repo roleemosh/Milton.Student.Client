@@ -17,7 +17,8 @@ jobs:
      # Install dotnet wasm buildtools workload
     - name: Install .NET WASM Build Tools
       run: dotnet workload install wasm-tools
-         # Install Node JS
+     # Install Node JS
+    - uses: actions/checkout@v3
     - name: Setup Node.js environment
       uses: actions/setup-node@v3
       with:
