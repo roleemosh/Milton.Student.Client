@@ -1,8 +1,9 @@
 ﻿@using Milton.Blazor.Shared.Interfaces;
+
 @inherits LayoutComponentBase
 @inject IPageTitleService PageTitleService
 <div class="min-h-full w-full">
-    <div class="absolute h-full w-full top-0 right-0 z-[-1]">
+    <div class="fixed h-full w-full top-0 right-0 z-[-1]">
         <div class="w-full h-3/5">
             <div class="flex flex-row h-full w-ful">
                 <div class="flex w-4/12 h-full grow-0 flex-col">
@@ -15,18 +16,22 @@
         <div class="w-full h-2/5 bg-white"></div>
     </div>
     <div>
-        <Milton.Blazor.Shared.UserControls.NavBar></Milton.Blazor.Shared.UserControls.NavBar>
+      @*  <Milton.Blazor.Shared.UserControls.NavBar></Milton.Blazor.Shared.UserControls.NavBar>*@
     </div>
-    <header class="body-font">
-        <div class="max-w-[14rem] px-6 pt-16 sm:px-6 lg:px-8">
+    <header class="body-font sticky" style="min-height:5rem; top: 5rem; ">
+        <div class="max-w-[14rem] px-6 sm:px-6 lg:px-8">
             <h3 class="text-lg tracking-tight text-white">@_subTitle </h3>
             <h1 class="text-3xl font-bold tracking-tight text-white">@_mainTitle</h1>
         </div>
     </header>
-    <main class="w-full body-font pb-4 pt-16">
+    <main class="w-full body-font mb-4 py-4">
         @Body
     </main>
 </div>
+
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
 @code{
     private string _mainTitle = string.Empty;

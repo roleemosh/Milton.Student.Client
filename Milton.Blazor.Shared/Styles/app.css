@@ -2,7 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --mdc-theme-primary: #38A3FB;
+}
+
 @layer base {
+
+    tr.spaceUnder > td {
+        padding-bottom: 0.5em;
+    }
 
     html, body {
         @apply h-full w-full antialiased;
@@ -10,6 +18,7 @@
 }
 
 @layer components {
+
 
     .content-overlay {
         top: 0;

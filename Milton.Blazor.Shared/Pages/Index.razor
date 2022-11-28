@@ -1,9 +1,14 @@
 ﻿@page "/"
-@inject NavigationManager NavigationManager
+@using Milton.Blazor.Shared.UIModels;
 @using Microsoft.AspNetCore.Components.Web
-@using Milton.Blazor.Shared.Models;
+@using Milton.Blazor.Shared.Interfaces;
+@using Milton.Blazor.Shared.Services;
+@using Milton.Blazor.Shared.UIModels;
 
-<PageTitle>Index</PageTitle>
+@inject NavigationManager NavigationManager
+@inject IPageTitleService PageTitleService
+
+<PageTitle>Milton</PageTitle>
 
 <div class="px-10">
 
@@ -41,17 +46,21 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-
+        UpdateMainTitle();
         FillMenuCards();
+    }
+
+    private void UpdateMainTitle()
+    {
+        PageTitleService.MainTitle = string.Empty;
+        PageTitleService.SubTitle = string.Empty;
     }
 
     private void FillMenuCards()
     {
-        _mainCards.Add(new MainCard() { Title = "Pontszámító kalkulátor", SubTitle = "Fedezd fel", ImagePath = "calculator", Action = () => NavigationManager.NavigateTo("/counter") });
+        _mainCards.Add(new MainCard() { Title = "Pontszámító kalkulátor", SubTitle = "Fedezd fel", ImagePath = "calculator", Action = () => NavigationManager.NavigateTo("/calculator") });
         _mainCards.Add(new MainCard() { Title = "Rólunk", SubTitle = "Olvasd el", ImagePath = "about_us", Action = () => NavigationManager.NavigateTo("/aboutus") });
         _mainCards.Add(new MainCard() { Title = "Képzéseink", SubTitle = "Nézd meg", ImagePath = "courses", Action = () => NavigationManager.NavigateTo("/courses") });
     }
-}
-
 }
 

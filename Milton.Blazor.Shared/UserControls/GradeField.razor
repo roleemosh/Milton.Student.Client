@@ -1,0 +1,85 @@
+﻿@using Milton.Blazor.Shared.Translates;
+
+<div class="relative w-[5rem]">
+    <button disabled="@IsReadOnly" type="button" @onclick=@OnOpenButtonClicked class="disabled:opacity-75 h-[2.6rem] disabled:cursor-not-allowed w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="@_isExpanded" aria-labelledby="listbox-label">
+        <span class="block truncate">@(Value <= 0 ? " " : Value)</span>
+        <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+            <!-- Heroicon name: mini/chevron-up-down -->
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clip-rule="evenodd" />
+            </svg>
+        </span>
+    </button>
+
+    @if (_isExpanded && IsReadOnly == false)
+    {
+        <div onclick="@OnContentFaderClicked" class="content-overlay"></div>
+        <ul class="border z-10 top-0 absolute max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm" tabindex="-1" role="listbox">
+            <li @onclick=@(() => OnSelectAction(0)) class="text-gray-900 relative cursor-default bg-white hover:bg-blue-300 py-2 pl-3 pr-9" id="listbox-option-0" role="option">
+                <span class="font-normal block truncate">egyik sem</span>
+            </li>
+            <li @onclick=@(() => OnSelectAction(1)) class="text-gray-900 relative cursor-default bg-white hover:bg-blue-300 py-2 pl-3 pr-9" id="listbox-option-0" role="option">
+                <span class="font-normal block truncate">1</span>
+            </li>
+            <li @onclick=@(() => OnSelectAction(2)) class="text-gray-900 relative cursor-default bg-white hover:bg-blue-300 py-2 pl-3 pr-9" id="listbox-option-0" role="option">
+                <span class="font-normal block truncate">2</span>
+            </li>
+            <li @onclick=@(() => OnSelectAction(3)) class="text-gray-900 relative cursor-default bg-white hover:bg-blue-300 py-2 pl-3 pr-9" id="listbox-option-0" role="option">
+                <span class="font-normal block truncate">3</span>
+            </li>
+            <li @onclick=@(() => OnSelectAction(4)) class="text-gray-900 relative cursor-default bg-white hover:bg-blue-300 py-2 pl-3 pr-9" id="listbox-option-0" role="option">
+                <span class="font-normal block truncate">4</span>
+            </li>
+            <li @onclick=@(() => OnSelectAction(5)) class="text-gray-900 relative cursor-default bg-white hover:bg-blue-300 py-2 pl-3 pr-9" id="listbox-option-0" role="option">
+                <span class="font-normal block truncate">5</span>
+            </li>
+        </ul>
+    }
+
+</div>
+
+@code {
+    private bool _isExpanded;
+
+    [Parameter]
+    public bool Mandatory { get; set; } = true;
+
+    [Parameter]
+    public bool IsReadOnly { get; set; }
+
+    [Parameter]
+    public int Value { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    [Parameter]
+    public string PlaceholderText { get; set; }
+
+    private void OnContentFaderClicked()
+    {
+        OnOpenButtonClicked();
+    }
+
+    private void OnSelectAction(int value)
+    {
+        OnOpenButtonClicked();
+        Value = value;
+        ValueChanged.InvokeAsync(Value);
+    }
+
+    private void OnOpenButtonClicked()
+    {
+        _isExpanded = !_isExpanded;
+        StateHasChanged();
+    }
+
+
+    public GradeField()
+    {
+        PlaceholderText = AppResources.GradeField_PlaceholderText;
+    }
+}
+
+
+
