@@ -58,9 +58,9 @@
 
     private void FillMenuCards()
     {
-        _mainCards.Add(new MainCard() { Title = "Pontszámító kalkulátor", SubTitle = "Fedezd fel", ImagePath = "calculator", Action = () => NavigationManager.NavigateTo($"{NavigationManager.BaseUri}/calculator") });
-        _mainCards.Add(new MainCard() { Title = "Rólunk", SubTitle = "Olvasd el", ImagePath = "about_us", Action = () => NavigationManager.NavigateTo($"{NavigationManager.BaseUri}/aboutus") });
-        _mainCards.Add(new MainCard() { Title = "Képzéseink", SubTitle = "Nézd meg", ImagePath = "courses", Action = () => NavigationManager.NavigateTo($"{NavigationManager.BaseUri}/courses") });
+        _mainCards.Add(new MainCard() { Title = "Pontszámító kalkulátor", SubTitle = "Fedezd fel", ImagePath = "calculator", Action = () => NavigationManager.NavigateTo("calculator") });
+        _mainCards.Add(new MainCard() { Title = "Rólunk", SubTitle = "Olvasd el", ImagePath = "about_us", Action = () => NavigationManager.NavigateTo("aboutus") });
+        _mainCards.Add(new MainCard() { Title = "Képzéseink", SubTitle = "Nézd meg", ImagePath = "courses", Action = () => NavigationManager.NavigateTo("courses") });
     }
 }
 
