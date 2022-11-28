@@ -2,25 +2,38 @@ name: deploy to github pages
 
 on:
   push:
-    branches: [gh-pages]
+    branches: [master]
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 3.1.301
+        dotnet-version: '7.x'
+    - uses: actions/checkout@v3
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '19.x'
+    - run: npm ci
+    - name: Install dependencies
+      run: dotnet restore
     - name: Publish with dotnet
-      run: dotnet publish --configuration Release --output build
+      run: dotnet publish Milton.Blazor.App/Milton.Blazor.App.csproj --configuration Release --output release
+    - name: Change base-tag in index.html from / to Milton.Student.Client
+    
+      run: sed -i 's/<base href="\/" \/>/<base href="\/Milton.Student.Client\/" \/>/g' release/wwwroot/index.html  
+    - name: copy index.html to 404.html
+      run: cp release/wwwroot/index.html release/wwwroot/404.html
+    - name: Add .nojekyll file
+      run: touch release/wwwroot/.nojekyll
     - name: Deploy to Github Pages
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
-        BASE_BRANCH: development # The branch the action should deploy from.
-        FOLDER: build/wwwroot # The folder the action should deploy.
+        FOLDER: release/wwwroot # The folder the action should deploy.
         SINGLE_COMMIT: true
