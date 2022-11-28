@@ -26,13 +26,8 @@ jobs:
       run: dotnet restore
     - name: Publish with dotnet
       run: dotnet publish Milton.Blazor.App/Milton.Blazor.App.csproj --configuration Release --output release
-    - name: Change base-tag in index.html from / to Milton.Student.Client
-    
-      run: sed -i 's/<base href="\/" \/>/<base href="\/Milton.Student.Client\/" \/>/g' release/wwwroot/index.html  
     - name: copy index.html to 404.html
       run: cp release/wwwroot/index.html release/wwwroot/404.html
-    - name: Add .nojekyll file
-      run: touch release/wwwroot/.nojekyll
     - name: Deploy to Github Pages
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
