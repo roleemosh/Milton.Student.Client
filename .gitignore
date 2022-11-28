@@ -288,6 +288,9 @@ node_modules/
 # Visual Studio 6 build log
 *.plg
 
+# Generated css
+*.min.css
+
 # Visual Studio 6 workspace options file
 *.opt
 
