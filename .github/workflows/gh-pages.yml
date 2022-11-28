@@ -23,7 +23,6 @@ jobs:
       with:
           node-version: '16.13.0'
     - run: npm install
-      working-directory: ./Web
     # Restore Dependencies
     - name: Restore dependencies
       run: dotnet restore
@@ -33,7 +32,10 @@ jobs:
     # Publishes Blazor project to the release-folder
     - name: Publish with dotnet
       run: dotnet publish Milton.Blazor.App/Milton.Blazor.App.csproj -c:Release -p:GHPages=true --no-restore -o dist/Web --nologo
-     # Commit
+    # Change baseurl
+    - name: Change base-tag in index.html from / to Milton.Student.Client
+      run: sed -i 's/<base href="\/" \/>/<base href="\/Milton.Student.Client\/" \/>/g' dist/Web/wwwroot/index.html  
+   # Commit
     - name: Commit wwwroot to gh-pages branch
       uses: JamesIves/github-pages-deploy-action@3.7.1
       with:
