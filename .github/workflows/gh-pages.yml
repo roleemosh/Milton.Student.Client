@@ -25,7 +25,7 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Publish with dotnet
-      run: dotnet publish Milton.Blazor.App/Milton.Blazor.App.csproj --configuration Release --output release
+      run: dotnet publish Milton.Blazor.App/Milton.Blazor.App.csproj -c:Release -p:GHPages=true -o release --nologo
     - name: copy index.html to 404.html
       run: cp release/wwwroot/index.html release/wwwroot/404.html
     - name: Deploy to Github Pages
