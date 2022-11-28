@@ -183,7 +183,7 @@ namespace Milton.Blazor.Shared.ViewModels
             PageTitleService.SubTitle = "Pontszámító";
         }
 
-    
+
         private int CalculateHighSchoolPoints()
         {
             int points = 0;
@@ -213,6 +213,12 @@ namespace Milton.Blazor.Shared.ViewModels
                     validationErrors.Add($"{@subject.Name}, 11. osztályos adat megadás kötelező");
             }
 
+            void GraduationVaidation(Graduation @grad)
+            {
+                if (@grad.Percentage < 1 || @grad.Percentage > 100)
+                    validationErrors.Add($"A {@grad.Name} eredmény 0 és 100 közé kell esnie");
+            }
+
             Span<Subject> subjects = CollectionsMarshal.AsSpan(CurrentSubjects);
             ref var pointer = ref MemoryMarshal.GetReference(subjects);
 
@@ -235,6 +241,21 @@ namespace Milton.Blazor.Shared.ViewModels
             //Optional
             if (string.IsNullOrEmpty(SelectedSecondaryNaturalScience.Name) == false)
                 SubjectVaidation(SelectedSecondaryNaturalScience);
+
+            foreach (Graduation graduation in CurrentGraduations)
+            {
+                GraduationVaidation(graduation);
+            }
+
+            if (string.IsNullOrEmpty(GraduationChoosed.Name))
+                validationErrors.Add($"Választott érettségi megadása kötelező");
+            else
+                GraduationVaidation(GraduationChoosed);
+
+            if (string.IsNullOrEmpty(GraduationLanguage.Name))
+                validationErrors.Add($"Nyelvi érettségi megadása kötelező");
+            else
+                GraduationVaidation(GraduationLanguage);
 
             if (validationErrors.Count > 0)
             {
@@ -269,6 +290,8 @@ namespace Milton.Blazor.Shared.ViewModels
             }
         }
 
+#if DEBUG
+
         public void TestNavigation()
         {
             PointResult results = new();
@@ -295,6 +318,6 @@ namespace Milton.Blazor.Shared.ViewModels
             string base64 = Convert.ToBase64String(plainTextBytes);
             Navigation.NavigateTo($"calculatorresult/{base64}");
         }
-
+#endif
     }
 }

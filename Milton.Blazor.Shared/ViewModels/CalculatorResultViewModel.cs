@@ -49,16 +49,21 @@ namespace Milton.Blazor.Shared.ViewModels
         private void GetMaxPoints()
         {
             int academicPoints = CalculateAcademicPoints();
-            int gradPoints = CalculateGraduatePoints();
+            //Get the two highest Grad points
+            Graduation[] maxGrads = GetMaxGraduates(_result.Graduations);
+            int maxGradPoints = maxGrads[0].Percentage + maxGrads[1].Percentage;
+            academicPoints += maxGradPoints;
+
+            int gradPoints = maxGradPoints * 2;
             if (academicPoints > gradPoints)
             {
                 Points = academicPoints;
-                PointInfo = "Tanulmányi pontokból számítva";
+                PointInfo = $"Tanulmányi pontok | Érettégi tárgyak: {maxGrads[0].Name} és {maxGrads[1].Name}";
             }
             else
             {
                 Points = gradPoints;
-                PointInfo = "Érettségi pontokból számítva";
+                PointInfo = $"Érettségi duplázás | Tárgyak: {maxGrads[0].Name} és {maxGrads[1].Name}";
             }
         }
         public Task InitAsync()
@@ -110,7 +115,7 @@ namespace Milton.Blazor.Shared.ViewModels
                 {
                     Graduation[] maxGrads = GetMaxGraduates(machingPrimGrads);
                     int maxMatchGradPoints = (maxGrads[0].Percentage + maxGrads[1].Percentage) * 2;
-                    int academicPoints = CalculateAcademicPoints();
+                    int academicPoints = CalculateAcademicPoints() + maxGrads[0].Percentage + maxGrads[1].Percentage;
 
                     int localMaxPoints = maxMatchGradPoints > academicPoints ? maxMatchGradPoints : academicPoints;
                     if (localMaxPoints < course.PrevPoints)
@@ -120,8 +125,8 @@ namespace Milton.Blazor.Shared.ViewModels
 
                     string displayInfo;
                     displayInfo = maxMatchGradPoints > academicPoints
-                        ? "Tanulmányi pontok"
-                        : $"Érettségi duplázás, Tárgyak: {maxGrads[0].Name} + {maxGrads[1].Name}";
+                        ? "Tanulmányi pontok |"
+                        : $"Érettségi duplázás | Tárgyak: {maxGrads[0].Name} és {maxGrads[1].Name} |";
 
                     displayCource.PointInfo = displayInfo + " " + $"Pontszám:{localMaxPoints}";
                 }
@@ -170,7 +175,7 @@ namespace Milton.Blazor.Shared.ViewModels
                     });
 
                     int maxMatchGradPoints = (maxPrimValue + maxSecValue) * 2;
-                    int academicPoints = CalculateAcademicPoints();
+                    int academicPoints = CalculateAcademicPoints() + maxPrimValue + maxSecValue;
                     int localMaxPoints = maxMatchGradPoints > academicPoints ? maxMatchGradPoints : academicPoints;
 
                     if (localMaxPoints < course.PrevPoints)
@@ -180,10 +185,10 @@ namespace Milton.Blazor.Shared.ViewModels
 
                     string displayInfo;
                     displayInfo = maxMatchGradPoints > academicPoints
-                        ? "Tanulmányi pontok"
-                        : $"Érettségi duplázás, Tárgyak: {maxPrimGrad.Name} + {maxSecGrad.Name}";
+                        ? "Tanulmányi pontok |"
+                        : $"Érettségi duplázás | Tárgyak: {maxPrimGrad.Name} és {maxSecGrad.Name} |";
 
-                    displayCource.PointInfo = displayInfo + " " + $"Pontszám:{localMaxPoints}";
+                    displayCource.PointInfo = displayInfo + " " + $"Pontszám: {localMaxPoints}";
                 }
             }
 
